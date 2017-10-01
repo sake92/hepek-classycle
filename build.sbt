@@ -19,8 +19,10 @@ publishTo := {
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
-developers += Developer("sake92", "Sakib Hadžiavdić", "sakib@sake.ba", url("http://sake.ba"))
+licenses += ("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
 
 scmInfo := Some(ScmInfo(url("https://github.com/sake92/hepek-classycle"), "scm:git:git@github.com:sake92/hepek-classycle.git"))
+
+developers += Developer("sake92", "Sakib Hadžiavdić", "sakib@sake.ba", url("http://sake.ba"))
 
 homepage := Some(url("http://sake.ba"))
