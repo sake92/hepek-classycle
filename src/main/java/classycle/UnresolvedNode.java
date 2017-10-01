@@ -26,6 +26,7 @@
 package classycle;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import classycle.util.StringPattern;
@@ -76,6 +77,10 @@ class UnresolvedNode {
 
     public void setAttributes(ClassAttributes attributes) {
         this.attributes = attributes;
+    }
+
+    public static Comparator<UnresolvedNode> comparatorByClassName() {
+        return (o1, o2) -> o1.getAttributes().getName().compareTo(o2.getAttributes().getName());
     }
 
 }

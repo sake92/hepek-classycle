@@ -53,8 +53,7 @@ public class LongestWalkProcessor extends GraphProcessor {
      */
     @Override
     protected void finishProcessing(Vertex[] graph) {
-        Arrays.sort(graph,
-                (obj1, obj2) -> ((StrongComponent) obj1).getLongestWalk() - ((StrongComponent) obj2).getLongestWalk());
+        Arrays.sort(graph, StrongComponent.comparatorByLongestWalk());
     }
 
     /** Does nothing. */

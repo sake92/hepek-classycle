@@ -45,7 +45,7 @@ class GraphBuilder {
      *         result array.
      */
     static AtomicVertex[] createGraph(UnresolvedNode[] unresolvedNodes, boolean mergeInnerClasses) {
-        Arrays.sort(unresolvedNodes);
+        Arrays.sort(unresolvedNodes, UnresolvedNode.comparatorByClassName());
         final Map<String, AtomicVertex> vertices = createVertices(unresolvedNodes, mergeInnerClasses);
         final AtomicVertex[] result = vertices.values().toArray(new AtomicVertex[0]);
 

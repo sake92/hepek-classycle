@@ -42,7 +42,6 @@ public class StrongComponentAnalyser {
     /** Creates an instance for the specified graph. */
     public StrongComponentAnalyser(AtomicVertex[] graph) {
         this.graph = graph;
-        // Arrays.sort(graph, null);
     }
 
     /** Returns the graph of strong components. */

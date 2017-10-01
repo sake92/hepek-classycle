@@ -26,6 +26,7 @@
 package classycle.graph;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -299,6 +300,17 @@ public class StrongComponent extends Vertex {
             result.append("\n    ").append(getVertex(i));
         }
         return result.toString();
+    }
+
+    public static Comparator<Vertex> comparatorByLongestWalk() {
+        return (o1, o2) -> {
+            if (o1 instanceof StrongComponent && o2 instanceof StrongComponent) {
+                final StrongComponent o1Strong = (StrongComponent) o1;
+                final StrongComponent o2Strong = (StrongComponent) o2;
+                return o1Strong.getLongestWalk() - o2Strong.getLongestWalk();
+            }
+            return 0;
+        };
     }
 
 }

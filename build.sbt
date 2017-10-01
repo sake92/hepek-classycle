@@ -5,23 +5,15 @@ description := "Classycle fork"
 
 version := "0.0.1"
 
-scalaVersion := "2.12.3"
+publishMavenStyle := true   // publish as Java library
+crossPaths := false         // isn't Scala
+autoScalaLibrary := false   // don't need Scala to compile
 
-compileOrder := CompileOrder.JavaThenScala
-
-libraryDependencies ++= Seq(
-  //"org.specs2" % "classycle" % "1.4.3",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
-)
-
-publishMavenStyle := true
-
-// publish as Java library
-crossPaths := false
+mainClass in Compile := Some("classycle.Analyser")
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
-  if (version.value.trim.endsWith("SNAPSHOT"))
+  if (isSnapshot.value)
     Some("snapshots" at nexus + "content/repositories/snapshots")
   else
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
