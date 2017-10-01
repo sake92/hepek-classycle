@@ -1,13 +1,20 @@
 # hepek-classycle
-Classycle ressurection
+*Classycle, ressurected*
 
+This is a fork of popular library called [Classycle](http://classycle.sourceforge.net/index.html).
 
-# TODOs
+## What's different?  
+- added Java 7 and Java 9 Constant pool  [tags](https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.4).  
+Last official Classycle version (1.4.2) didn't support them.  
+You would recognize it by running into an issue like [this one](https://github.com/sake92/sbt-hepek/issues/2).
+- refactored to generics, lambdas etc
+- formatted code
+- removed Ant tasks, you can implement your own if you want... :stuck_out_tongue_winking_eye:
 
-- improve MethodHandleConstant and InvokeDynamicConstant
+# TODO
 
-
-- final-ize classes ?'??
+- improve [MethodHandleConstant](https://github.com/sake92/hepek-classycle/blob/master/src/main/java/classycle/classfile/MethodHandleConstant.java) and InvokeDynamicConstant. Anyone?
+- final-ize classes ???
 - remove Vector class ???
 
 
