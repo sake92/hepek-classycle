@@ -1,6 +1,7 @@
-/*
+/*******************************************************************************
  * Copyright (c) 2003-2008, Franz-Josef Elmer, All rights reserved.
- *
+ * Copyright (c) 2017, Sakib Hadžiavdić, All rights reserved.
+ * 
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
  * 
@@ -9,7 +10,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice, 
  *   this list of conditions and the following disclaimer in the documentation 
  *   and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
@@ -20,8 +21,8 @@
  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
- */
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 package classycle;
 
 import java.util.ArrayList;
@@ -34,24 +35,24 @@ import classycle.util.StringPattern;
  * 
  * @author Franz-Josef Elmer
  */
-class UnresolvedNode implements Comparable {
+class UnresolvedNode implements Comparable<UnresolvedNode> {
 
     private ClassAttributes _attributes;
     private List<String> _nodes = new ArrayList<>();
 
-    void setAttributes(ClassAttributes attributes) {
+    public void setAttributes(ClassAttributes attributes) {
         _attributes = attributes;
     }
 
-    ClassAttributes getAttributes() {
+    public ClassAttributes getAttributes() {
         return _attributes;
     }
 
-    void addLinkTo(String node) {
+    public void addLinkTo(String node) {
         _nodes.add(node);
     }
 
-    Iterator<String> linkIterator() {
+    public Iterator<String> linkIterator() {
         return new Iterator<String>() {
 
             private int _index;
@@ -70,11 +71,12 @@ class UnresolvedNode implements Comparable {
         };
     }
 
-    public int compareTo(Object obj) {
-        return getAttributes().getName().compareTo(((UnresolvedNode) obj).getAttributes().getName());
-    }
-
     public boolean isMatchedBy(StringPattern pattern) {
         return pattern.matches(getAttributes().getName());
+    }
+
+    @Override
+    public int compareTo(UnresolvedNode other) {
+        return getAttributes().getName().compareTo(other.getAttributes().getName());
     }
 }
