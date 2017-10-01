@@ -1,26 +1,26 @@
 /*******************************************************************************
  * Copyright (c) 2003-2008, Franz-Josef Elmer, All rights reserved.
  * Copyright (c) 2017, Sakib Hadžiavdić, All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without 
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * - Redistributions of source code must retain the above copyright notice, 
+ *
+ * - Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *   this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 package classycle.renderer;
@@ -85,29 +85,30 @@ import classycle.graph.StrongComponent;
  */
 public class TemplateBasedClassRenderer implements AtomicVertexRenderer {
 
-    private MessageFormat _format;
+    private final MessageFormat format;
 
     /** Creates an instance for the specified template. */
     public TemplateBasedClassRenderer(String template) {
-        _format = new MessageFormat(template);
+        format = new MessageFormat(template);
     }
 
     /**
      * Renderes the specified vertex. It is assumed that the vertex attributes are of the type
      * {@link classycle.ClassAttributes}.
-     * 
+     *
      * @param vertex
      *            Vertex to be rendered.
      * @return the rendered vertex.
      */
+    @Override
     public String render(AtomicVertex vertex, StrongComponent cycle, int layerIndex) {
-        String[] values = new String[10];
-        NameAndSourceAttributes attributes = (NameAndSourceAttributes) vertex.getAttributes();
+        final String[] values = new String[10];
+        final NameAndSourceAttributes attributes = (NameAndSourceAttributes) vertex.getAttributes();
         values[0] = attributes.getName();
         values[2] = Integer.toString(attributes.getSize());
         values[9] = attributes.getSources();
         if (attributes instanceof ClassAttributes) {
-            ClassAttributes ca = (ClassAttributes) attributes;
+            final ClassAttributes ca = (ClassAttributes) attributes;
             values[1] = ca.getType();
             values[3] = ca.isInnerClass() ? "true" : "false";
         } else {
@@ -128,6 +129,6 @@ public class TemplateBasedClassRenderer implements AtomicVertexRenderer {
         values[6] = Integer.toString(usesExternal);
         values[7] = Integer.toString(layerIndex);
         values[8] = cycle == null ? "" : AbstractStrongComponentRenderer.createName(cycle);
-        return _format.format(values);
+        return format.format(values);
     }
 }

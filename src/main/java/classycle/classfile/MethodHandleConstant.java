@@ -23,33 +23,30 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package classycle.renderer;
-
-import classycle.ClassAttributes;
-import classycle.graph.AtomicVertex;
+package classycle.classfile;
 
 /**
- * XML renderer of an {@link AtomicVertex} with {@link ClassAttributes}.
+ * Constant holding a name of package.
  *
- * @author Franz-Josef Elmer
+ * @author Sakib Hadžiavdić
  */
-public class XMLClassRenderer extends XMLAtomicVertexRenderer {
+public final class MethodHandleConstant extends Constant {
 
-    @Override
-    protected String getElement() {
-        return "class";
+    // TODO what to do with referenceKind and referenceIndex? a bit tricky
+    // https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.4.8
+    private final int referenceKind;
+    private final int referenceIndex;
+
+    public MethodHandleConstant(Constant[] pool, int referenceKind, int referenceIndex) {
+        super(pool);
+        this.referenceKind = referenceKind;
+        this.referenceIndex = referenceIndex;
     }
 
+    /** Returns the constant type and the wrapped string. */
     @Override
-    protected String getRefElement() {
-        return "classRef";
+    public String toString() {
+        return "CONSTANT_MethodHandle: " + referenceKind + "," + referenceIndex;
     }
 
-    @Override
-    protected AtomicVertexRenderer getVertexRenderer() {
-        return new TemplateBasedClassRenderer(
-                "    <" + getElement() + " name=\"{0}\" sources=\"{9}\" type=\"{1}\" innerClass=\"{3}\""
-                        + " size=\"{2}\" usedBy=\"{4}\" usesInternal=\"{5}\""
-                        + " usesExternal=\"{6}\" layer=\"{7}\" cycle=\"{8}\">\n");
-    }
 }

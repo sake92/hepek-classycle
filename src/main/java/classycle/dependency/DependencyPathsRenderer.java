@@ -1,26 +1,26 @@
 /*******************************************************************************
  * Copyright (c) 2003-2008, Franz-Josef Elmer, All rights reserved.
  * Copyright (c) 2017, Sakib Hadžiavdić, All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without 
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * - Redistributions of source code must retain the above copyright notice, 
+ *
+ * - Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *   this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 package classycle.dependency;
@@ -38,10 +38,10 @@ import classycle.util.StringPattern;
 public class DependencyPathsRenderer {
 
     private static final String INDENT = "  ";
-    private final Vertex[] _graph;
-    private final VertexCondition _startSetCondition;
-    private final VertexCondition _finalSetCondition;
-    private final Set<Vertex> _vertices = new HashSet<Vertex>();
+    private final Vertex[] graph;
+    private final VertexCondition startSetCondition;
+    private final VertexCondition finalSetCondition;
+    private final Set<Vertex> vertices = new HashSet<>();
 
     public DependencyPathsRenderer(Vertex[] graph, StringPattern startSetPattern, StringPattern finalSetPattern) {
         this(graph, new PatternVertexCondition(startSetPattern), new PatternVertexCondition(finalSetPattern));
@@ -49,73 +49,76 @@ public class DependencyPathsRenderer {
 
     public DependencyPathsRenderer(Vertex[] graph, VertexCondition startSetCondition,
             VertexCondition finalSetCondition) {
-        _graph = graph;
-        _startSetCondition = startSetCondition;
-        _finalSetCondition = finalSetCondition;
+        this.graph = graph;
+        this.startSetCondition = startSetCondition;
+        this.finalSetCondition = finalSetCondition;
         for (int i = 0; i < graph.length; i++) {
-            _vertices.add(graph[i]);
+            vertices.add(graph[i]);
         }
     }
 
-    public String renderGraph(final String lineStart) {
-        final StringBuffer buffer = new StringBuffer();
-        DependencyPathRenderer renderer = new DependencyPathRenderer() {
-
-            String _start = '\n' + lineStart;
-            private int _indentation;
-
-            public void increaseIndentation() {
-                _indentation++;
-            }
-
-            public void add(String nodeName) {
-                buffer.append(_start);
-                for (int i = 0; i < _indentation; i++) {
-                    buffer.append(INDENT);
-                }
-                if (_indentation > 0) {
-                    buffer.append("-> ");
-                }
-                buffer.append(nodeName);
-            }
-
-            public void decreaseIndentation() {
-                _indentation--;
-            }
-
-        };
-        renderGraph(renderer);
-
-        return new String(buffer);
+    private String getNameOf(Vertex vertex) {
+        return ((NameAttributes) vertex.getAttributes()).getName();
     }
 
     public void renderGraph(DependencyPathRenderer renderer) {
-        Set<Vertex> visitedVertices = new HashSet<Vertex>();
-        for (int i = 0; i < _graph.length; i++) {
-            Vertex vertex = _graph[i];
-            if (_startSetCondition.isFulfilled(vertex)) {
+        final Set<Vertex> visitedVertices = new HashSet<>();
+        for (int i = 0; i < graph.length; i++) {
+            final Vertex vertex = graph[i];
+            if (startSetCondition.isFulfilled(vertex)) {
                 renderer.add(getNameOf(vertex));
                 renderPaths(renderer, vertex, visitedVertices);
             }
         }
     }
 
+    public String renderGraph(final String lineStart) {
+        final StringBuilder builder = new StringBuilder();
+        final DependencyPathRenderer renderer = new DependencyPathRenderer() {
+
+            String start = '\n' + lineStart;
+            private int indentation;
+
+            @Override
+            public void add(String nodeName) {
+                builder.append(start);
+                for (int i = 0; i < indentation; i++) {
+                    builder.append(INDENT);
+                }
+                if (indentation > 0) {
+                    builder.append("-> ");
+                }
+                builder.append(nodeName);
+            }
+
+            @Override
+            public void decreaseIndentation() {
+                indentation--;
+            }
+
+            @Override
+            public void increaseIndentation() {
+                indentation++;
+            }
+
+        };
+        renderGraph(renderer);
+
+        return builder.toString();
+    }
+
     private void renderPaths(DependencyPathRenderer renderer, Vertex vertex, Set<Vertex> visitedVertices) {
         visitedVertices.add(vertex);
         renderer.increaseIndentation();
         for (int i = 0, n = vertex.getNumberOfOutgoingArcs(); i < n; i++) {
-            Vertex headVertex = vertex.getHeadVertex(i);
-            if (_vertices.contains(headVertex) && !_startSetCondition.isFulfilled(headVertex)) {
+            final Vertex headVertex = vertex.getHeadVertex(i);
+            if (vertices.contains(headVertex) && !startSetCondition.isFulfilled(headVertex)) {
                 renderer.add(getNameOf(headVertex));
-                if (!_finalSetCondition.isFulfilled(headVertex) && !visitedVertices.contains(headVertex)) {
+                if (!finalSetCondition.isFulfilled(headVertex) && !visitedVertices.contains(headVertex)) {
                     renderPaths(renderer, headVertex, visitedVertices);
                 }
             }
         }
         renderer.decreaseIndentation();
-    }
-
-    private String getNameOf(Vertex vertex) {
-        return ((NameAttributes) vertex.getAttributes()).getName();
     }
 }

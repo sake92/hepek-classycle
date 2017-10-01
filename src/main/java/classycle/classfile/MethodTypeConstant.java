@@ -23,33 +23,36 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package classycle.renderer;
-
-import classycle.ClassAttributes;
-import classycle.graph.AtomicVertex;
+package classycle.classfile;
 
 /**
- * XML renderer of an {@link AtomicVertex} with {@link ClassAttributes}.
+ * Constant holding a name of method type.
  *
- * @author Franz-Josef Elmer
+ * @author Sakib Hadžiavdić
  */
-public class XMLClassRenderer extends XMLAtomicVertexRenderer {
+public final class MethodTypeConstant extends Constant {
 
-    @Override
-    protected String getElement() {
-        return "class";
+    private final int descriptorIndex;
+
+    public MethodTypeConstant(Constant[] pool, int descriptorIndex) {
+        super(pool);
+        this.descriptorIndex = descriptorIndex;
     }
 
-    @Override
-    protected String getRefElement() {
-        return "classRef";
+    /** Returns the type or method descriptor. */
+    public String getDescriptor() {
+        String result = null;
+        final Constant c = getConstant(descriptorIndex);
+        if (c instanceof UTF8Constant) {
+            result = ((UTF8Constant) c).getString();
+        }
+        return result;
     }
 
+    /** Returns the constant type and the wrapped string. */
     @Override
-    protected AtomicVertexRenderer getVertexRenderer() {
-        return new TemplateBasedClassRenderer(
-                "    <" + getElement() + " name=\"{0}\" sources=\"{9}\" type=\"{1}\" innerClass=\"{3}\""
-                        + " size=\"{2}\" usedBy=\"{4}\" usesInternal=\"{5}\""
-                        + " usesExternal=\"{6}\" layer=\"{7}\" cycle=\"{8}\">\n");
+    public String toString() {
+        return "CONSTANT_MethodType: " + getDescriptor();
     }
+
 }

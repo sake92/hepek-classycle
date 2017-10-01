@@ -1,26 +1,26 @@
 /*******************************************************************************
  * Copyright (c) 2003-2008, Franz-Josef Elmer, All rights reserved.
  * Copyright (c) 2017, Sakib Hadžiavdić, All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without 
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * - Redistributions of source code must retain the above copyright notice, 
+ *
+ * - Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *   this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 package classycle.classfile;
@@ -30,9 +30,9 @@ import java.io.IOException;
 
 /**
  * Abstract super class of all type of constants in the constant pool of a class file.
- * 
+ *
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.4-150">JVM 9 constants specs</a>
- * 
+ *
  * @author Franz-Josef Elmer
  * @author Sakib Hadžiavdić
  */
@@ -60,11 +60,11 @@ public abstract class Constant {
     private static final int CONSTANT_MODULE = 19;
     private static final int CONSTANT_PACKAGE = 20;
 
-    private Constant[] pool;
+    private final Constant[] pool;
 
     /**
      * Creates an instance.
-     * 
+     *
      * @param pool
      *            The poole which will be needed to resolve references.
      */
@@ -74,7 +74,7 @@ public abstract class Constant {
 
     /**
      * Returns the specified constant from the pool.
-     * 
+     *
      * @param index
      *            Index of requested constant.
      */
@@ -84,7 +84,7 @@ public abstract class Constant {
 
     /**
      * Extracts the constant pool from the specified data stream of a class file.
-     * 
+     *
      * @param stream
      *            Input stream of a class file starting at the first byte.
      * @return extracted array of constants.
@@ -96,12 +96,12 @@ public abstract class Constant {
         if (stream.readInt() == MAGIC) {
             stream.readUnsignedShort(); // minorVersion
             stream.readUnsignedShort(); // majorVersion
-            int constantPoolCount = stream.readUnsignedShort();
+            final int constantPoolCount = stream.readUnsignedShort();
             pool = new Constant[constantPoolCount];
             for (int i = 1; i < constantPoolCount;) {
                 boolean skipIndex = false;
                 Constant c = null;
-                int type = stream.readUnsignedByte();
+                final int type = stream.readUnsignedByte();
                 switch (type) {
                     case CONSTANT_CLASS:
                         c = new ClassConstant(pool, stream.readUnsignedShort());
@@ -141,20 +141,20 @@ public abstract class Constant {
                         break;
                     // Java 8
                     case CONSTANT_METHOD_HANDLE:
-                        c = new ConstantMethodHandle(pool, stream.readUnsignedByte(), stream.readUnsignedShort());
+                        c = new MethodHandleConstant(pool, stream.readUnsignedByte(), stream.readUnsignedShort());
                         break;
                     case CONSTANT_METHOD_TYPE:
-                        c = new ConstantMethodType(pool, stream.readUnsignedShort());
+                        c = new MethodTypeConstant(pool, stream.readUnsignedShort());
                         break;
                     case CONSTANT_INVOKE_DYNAMIC:
-                        c = new ConstantInvokeDynamic(pool, stream.readUnsignedShort(), stream.readUnsignedShort());
+                        c = new InvokeDynamicConstant(pool, stream.readUnsignedShort(), stream.readUnsignedShort());
                         break;
                     // Java 9
                     case CONSTANT_MODULE:
-                        c = new ConstantModule(pool, stream.readUnsignedShort());
+                        c = new ModuleConstant(pool, stream.readUnsignedShort());
                         break;
                     case CONSTANT_PACKAGE:
-                        c = new ConstantPackage(pool, stream.readUnsignedShort());
+                        c = new PackageConstant(pool, stream.readUnsignedShort());
                         break;
                     default:
                         throw new IOException("Unknown constant pool tag. New Java version (10+) came out?");

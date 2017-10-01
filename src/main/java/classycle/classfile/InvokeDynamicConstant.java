@@ -23,33 +23,41 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package classycle.renderer;
-
-import classycle.ClassAttributes;
-import classycle.graph.AtomicVertex;
+package classycle.classfile;
 
 /**
- * XML renderer of an {@link AtomicVertex} with {@link ClassAttributes}.
+ * Constant holding a name of package.
  *
- * @author Franz-Josef Elmer
+ * @author Sakib Hadžiavdić
  */
-public class XMLClassRenderer extends XMLAtomicVertexRenderer {
+public final class InvokeDynamicConstant extends Constant {
 
-    @Override
-    protected String getElement() {
-        return "class";
+    // TODO what to do with bootstrapMethodAttrIndex?
+    private final int bootstrapMethodAttrIndex;
+    private final int nameAndTypeIndex;
+
+    public InvokeDynamicConstant(Constant[] pool, int bootstrapMethodAttrIndex, int nameAndTypeIndex) {
+        super(pool);
+        this.bootstrapMethodAttrIndex = bootstrapMethodAttrIndex;
+        this.nameAndTypeIndex = nameAndTypeIndex;
     }
 
-    @Override
-    protected String getRefElement() {
-        return "classRef";
+    /**
+     * @return the nameAndTypeIndex
+     */
+    public String getNameAndType() {
+        String result = null;
+        final Constant c = getConstant(nameAndTypeIndex);
+        if (c instanceof NameAndTypeConstant) {
+            result = ((NameAndTypeConstant) c).toString();
+        }
+        return result;
     }
 
+    /** Returns the constant type and the wrapped string. */
     @Override
-    protected AtomicVertexRenderer getVertexRenderer() {
-        return new TemplateBasedClassRenderer(
-                "    <" + getElement() + " name=\"{0}\" sources=\"{9}\" type=\"{1}\" innerClass=\"{3}\""
-                        + " size=\"{2}\" usedBy=\"{4}\" usesInternal=\"{5}\""
-                        + " usesExternal=\"{6}\" layer=\"{7}\" cycle=\"{8}\">\n");
+    public String toString() {
+        return "CONSTANT_InvokeDynamic: " + getNameAndType() + "," + bootstrapMethodAttrIndex;
     }
+
 }

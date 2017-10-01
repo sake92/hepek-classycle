@@ -1,26 +1,26 @@
 /*******************************************************************************
  * Copyright (c) 2003-2008, Franz-Josef Elmer, All rights reserved.
  * Copyright (c) 2017, Sakib Hadžiavdić, All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without 
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * - Redistributions of source code must retain the above copyright notice, 
+ *
+ * - Redistributions of source code must retain the above copyright notice,
  *   this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *   this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 package classycle.graph;
@@ -28,7 +28,7 @@ package classycle.graph;
 /**
  * Abstract class for all algorithms based on deep search first. This class is designed in accordance with the Template
  * Method pattern. The basic algorithm (implemented in the method {@link #process}) reads:
- * 
+ *
  * <pre>
  * vertex.visit();
  * processBefore(vertex);
@@ -37,7 +37,7 @@ package classycle.graph;
  * }
  * processAfter(vertex);
  * </pre>
- * 
+ *
  * The methods {@link #initializeProcessing initializeProcessing()}, {@link #processBefore processBefore()},
  * {@link #processArc processArc()}, and {@link #processAfter processAfter()} have to be implemented by concrete
  * classes.
@@ -54,7 +54,7 @@ public abstract class GraphProcessor {
      * Performs a deep search first of the specified graph. First, processing will be initialized and all vertices of
      * the graph will be reset. Then for all unvisited vertices the method <tt>process(Vertex)</tt> will be invoked. At
      * last, processing will be finished.
-     * 
+     *
      * @param graph
      *            A directed graph.
      */
@@ -72,6 +72,16 @@ public abstract class GraphProcessor {
         finishProcessing(graph);
     }
 
+    /**
+     * Finishes processing. Will be called in method {@link #deepSearchFirst}.
+     */
+    protected abstract void finishProcessing(Vertex[] graph);
+
+    /**
+     * Initializes processing. Will be called in method {@link #deepSearchFirst}.
+     */
+    protected abstract void initializeProcessing(Vertex[] graph);
+
     /** Processes the specified vertex. */
     protected void process(Vertex vertex) {
         vertex.visit();
@@ -83,21 +93,16 @@ public abstract class GraphProcessor {
     }
 
     /**
-     * Initializes processing. Will be called in method {@link #deepSearchFirst}.
-     */
-    protected abstract void initializeProcessing(Vertex[] graph);
-
-    /**
-     * Processes the specified vertex before its outgoing arcs are processed.
-     * 
+     * Processes the specified vertex after its arcs have been processed.
+     *
      * @param vertex
      *            Vertex to be processed.
      */
-    protected abstract void processBefore(Vertex vertex);
+    protected abstract void processAfter(Vertex vertex);
 
     /**
      * Processes the arc specified by tail and head vertices.
-     * 
+     *
      * @param tail
      *            Tail vertex of the arc.
      * @param head
@@ -106,16 +111,11 @@ public abstract class GraphProcessor {
     protected abstract void processArc(Vertex tail, Vertex head);
 
     /**
-     * Processes the specified vertex after its arcs have been processed.
-     * 
+     * Processes the specified vertex before its outgoing arcs are processed.
+     *
      * @param vertex
      *            Vertex to be processed.
      */
-    protected abstract void processAfter(Vertex vertex);
-
-    /**
-     * Finishes processing. Will be called in method {@link #deepSearchFirst}.
-     */
-    protected abstract void finishProcessing(Vertex[] graph);
+    protected abstract void processBefore(Vertex vertex);
 
 }
