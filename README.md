@@ -13,7 +13,7 @@ You would recognize it by running into an issue like [this one](https://github.c
 
 # Usage
 
-## Programatically
+## Programmatically
 `libraryDependencies ++= Seq("ba.sake" % "hepek-classycle" % "0.0.1")`
 
 ## Console
@@ -24,8 +24,3 @@ See official [user guide](http://classycle.sourceforge.net/userGuide.html).
 - improve [MethodHandleConstant](https://github.com/sake92/hepek-classycle/blob/master/src/main/java/classycle/classfile/MethodHandleConstant.java) and InvokeDynamicConstant. Anyone?
 - final-ize classes ???
 - remove Vector class ???
-
-
-
-
-
