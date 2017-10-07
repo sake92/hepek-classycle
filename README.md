@@ -1,4 +1,5 @@
 # hepek-classycle
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/ba.sake/hepek-classycle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/ba.sake/hepek-classycle)  
 *Classycle, ressurected*
 
 This is a fork of popular library called [Classycle](http://classycle.sourceforge.net/index.html).
