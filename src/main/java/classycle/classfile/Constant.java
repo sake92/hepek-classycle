@@ -52,7 +52,7 @@ public abstract class Constant {
     private static final int CONSTANT_DOUBLE = 6;
     private static final int CONSTANT_NAME_AND_TYPE = 12;
     private static final int CONSTANT_UTF8 = 1;
-    // Java 8
+    // Java 7
     private static final int CONSTANT_METHOD_HANDLE = 15;
     private static final int CONSTANT_METHOD_TYPE = 16;
     private static final int CONSTANT_INVOKE_DYNAMIC = 18;
@@ -139,7 +139,7 @@ public abstract class Constant {
                     case CONSTANT_UTF8:
                         c = new UTF8Constant(pool, stream.readUTF());
                         break;
-                    // Java 8
+                    // Java 7
                     case CONSTANT_METHOD_HANDLE:
                         c = new MethodHandleConstant(pool, stream.readUnsignedByte(), stream.readUnsignedShort());
                         break;
