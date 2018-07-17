@@ -3,7 +3,7 @@ organization := "ba.sake"
 name := "hepek-classycle"
 description := "Classycle fork"
 
-version := "0.0.1"
+version := "0.0.2-SNAPSHOT"
 
 publishMavenStyle := true   // publish as Java library
 crossPaths := false         // isn't Scala
